@@ -1,0 +1,6 @@
+const {run}=require('./harness.cjs');run(`
+const walls=[];function shell(x,z,w,d,doorSide,doorAt){for(const side of ['north','south','west','east']){const h=side==='north'||side==='south',fixed=h?z+(side==='north'?-d/2:d/2):x+(side==='west'?-w/2:w/2),lo=h?x-w/2:z-d/2,hi=h?x+w/2:z+d/2;for(const [a,b]of(side===doorSide?[[lo,doorAt-1.35],[doorAt+1.35,hi]]:[[lo,hi]]))walls.push({h,fixed,a,b})}}
+people.forEach(p=>shell(p.home[0],p.home[1]+1,9,8,p.home[0]===0?'north':p.home[0]<0?'east':'west',p.home[0]===0?0:p.home[1]));shell(0,6,14,12,'north',0);shell(13,18,9,8,'west',16.6);shell(-13,18,9,8,'east',16.6);shell(-5,-19,6,5,'south',-5);shell(0,18,14,8,'north',0);
+const points=[...people.map(p=>p.home),[0,6.7],[0,9.2],[13,16.6],[-13,16.6],[-5,-18],[-2.2,16.5],[0,19.5],[2.2,19.5],[0,15.2]];let checked=0;
+for(const from of points)for(const to of points){let p=from;for(const q of campusRoute(from,to)){const distance=Math.hypot(q[0]-p[0],q[1]-p[1]),n=Math.max(1,Math.ceil(distance/.1));for(let i=0;i<=n;i++){const x=p[0]+(q[0]-p[0])*i/n,z=p[1]+(q[1]-p[1])*i/n;for(const w of walls){const fixed=w.h?z:x,axis=w.h?x:z;if(Math.abs(fixed-w.fixed)<.13&&axis>w.a-.08&&axis<w.b+.08)throw Error('Ruta cruza pared: '+JSON.stringify({from,to,x,z,w}))}}p=q}checked++}console.log('OK: '+checked+' recorridos entre oficinas y zonas comunes pasan por las entradas.');
+`);

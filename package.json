@@ -1,0 +1,5 @@
+{
+  "name": "paul-engineering-studio",
+  "private": true,
+  "scripts": {"test": "node tests/run.cjs"}
+}
