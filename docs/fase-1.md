@@ -1,4 +1,4 @@
-# Fase 1 — aprobada; mejora de reuniones pendiente de aprobación
+# Fase 1 — aprobada; mejoras visuales pendientes de aprobación
 
 Fecha: 14 de octubre de 2026. **Paul aprobó la Fase 1. La mejora adicional de la pantalla de reuniones queda PENDIENTE DE SU VERIFICACIÓN Y APROBACIÓN.** No se inició la Fase 2. La lista anterior se conserva como referencia, sin inventar resultados visuales.
 
@@ -50,7 +50,7 @@ Paul completará la comprobación visual y las mediciones en escritorio y móvil
 | Elemento | Hallazgo y tratamiento |
 |---|---|
 | Escritorios de empleados y CEO | Volúmenes rectangulares protegidos, con margen de 0,34 unidades para el cuerpo. El paso entre los dos lados del escritorio CEO requiere un desvío. |
-| Mesa de conferencia del CEO y mesa de reuniones | Protegidas; la ruta evita atravesar la superficie. |
+| Mesa pequeña del CEO y mesa de reuniones | La mesa del CEO fue retirada en la mejora posterior, junto con sus seis sillas y su colisión. La mesa de la sala de reuniones sigue protegida. |
 | Mesa del comedor | Protegida; se adelantaron los destinos de comida para evitar que el cuerpo quede dentro del borde de la mesa. |
 | Mesa de centro de descanso | Protegida; el movimiento busca un desvío. |
 | Sofás | Los destinos de descanso son posiciones de asiento. No hay física completa de respaldos/apoyabrazos; el acceso lateral puede tener contacto visual. PENDIENTE de observación de Paul. |
@@ -143,3 +143,64 @@ Las reuniones con objetivos largos duran más para permitir presentar todo el te
 - [ ] Lector ampliable legible en móvil y escritorio.
 
 Se espera la aprobación de esta mejora. No continuar con la Fase 2 en este alcance.
+
+## Mejora adicional — oficina de Paul (CEO)
+
+### 1. Resumen
+
+Se retiraron la mesa pequeña de reuniones, sus seis sillas y su obstáculo de navegación. En esa zona se instaló una TV grande en la pared izquierda, con marco oscuro y mueble bajo de madera. Hay dos sillas de visita junto al escritorio, con el punto central de recepción de Nico despejado.
+Se añadieron alfombra ejecutiva, librería con libros y jarrón, tres diplomas, tres plantas grandes, lámparas de pie y escritorio, reloj de pared, bandeja de café, agenda y credenza con objetos decorativos. Se conserva la planta de la oficina, el escritorio y el estilo de madera, tonos claros y elementos oscuros.
+La TV se apaga sin misión. Con misión activa muestra la marca de la oficina, objetivo, equipo y estado mediante CanvasTexture. El panel «TV de Paul · Ampliar resumen» permite leer todo el objetivo en móvil; la cámara «Oficina de Paul · TV» encuadra la zona.
+Los nueve muebles de suelo y cuatro adornos de pared tienen obstáculos registrados. Dimensiones de muebles compartidas entre dibujo y navegación, con margen adicional para tiradores y bordes. No se inició la Fase 2 ni se modificaron otras salas.
+
+### 2. Archivos creados o modificados
+
+- `dist/ceo-office.js` (nuevo): dimensiones de los muebles CEO, decoración mural, punto de recepción y estado de la TV.
+- `dist/app.js`: oficina CEO, obstáculos, textura de TV, lector de resumen y cámara directa.
+- `dist/index.html`, `dist/style.css`: opción de cámara, carga del módulo y lector accesible.
+- `tests/oficina-ceo.cjs` (nuevo): muebles, 32 rutas, recepción, visita, estado de TV y recarga.
+- `tests/escena.mjs`: textura de TV y conservación de las tres luces.
+- `tests/harness.cjs`, `tests/coordinacion.cjs`, `tests/run.cjs`: carga del módulo y ejecución de la nueva prueba.
+- `docs/fase-1.md`: informe de esta mejora.
+
+### 3. Cómo probarlo
+
+1. Abrir la oficina y elegir «Cámara → Oficina de Paul · TV», o tocar el letrero «Paul · CEO».
+2. Antes de enviar una misión, comprobar que la TV está apagada, que la mesa pequeña y sus seis sillas desaparecieron y que la decoración deja pasillos libres.
+3. Enviar «Quiero crear un sistema de inventario con base de datos». La TV debe encenderse, mostrar el resumen y cambiar el estado conforme Nico avanza. Abrir «TV de Paul · Ampliar resumen» para leer el objetivo completo.
+4. Observar a Nico en la recepción y entrega. Pedir a un empleado disponible «Ven a mi escritorio»: debe llegar al punto frontal sin atravesar muebles. Los personajes reciben las visitas de pie; las dos sillas nuevas son mobiliario protegido, no nuevos destinos automáticos para sentarse.
+5. Recargar con una misión activa; la TV debe reconstruir el resumen del guardado. Aceptar la entrega y esperar sin cola: debe apagarse y ocultarse el lector.
+6. Mover a Paul entre escritorio y pasillos. Revisar acceso alrededor de sillas, librería, mueble de TV, credenza, plantas y lámpara.
+7. Ejecutar `npm test`. Para medir rendimiento real, abrir `?debug=1` en el mismo dispositivo y registrar FPS en ×1/×2/×4 y carga inicial. La versión anterior para comparación está en el historial de Git (commit local `d15623f`, equivalente al commit GitHub `8e09fff`).
+
+### 4. Resultado de pruebas y rendimiento
+
+`npm test` pasa las diez suites: coordinación, 256 recorridos históricos, reuniones, pantalla de reuniones, escena, persistencia, tránsito, diagnóstico, muebles y oficina CEO.
+La prueba CEO comprueba que la mesa retirada ya no tiene colisión, que su zona se puede usar, que cada mueble/adorno mural registra un obstáculo y que 32 rutas desde las oficinas y la entrada hacia recepción, escritorio y zonas laterales evitan muebles. Verifica recepción de Nico, visita de un empleado, TV activa/apagada y recarga.
+La prueba de escena usa Three.js real con renderizador de prueba: verifica CanvasTexture, apagado/encendido, reutilización del contenido sin repintado innecesario y las mismas tres luces. Las piezas se siguen agrupando por material y reutilizan las geometrías existentes.
+Antes de los cambios, la prueba estructural contó 334 mallas; después, 332 en el mismo punto inicial. Esto es un conteo de estructura, **no una medición de FPS, GPU ni una garantía de rendimiento**. La nueva TV añade una textura de 1280 × 720, que solo se repinta cuando cambia la misión o su estado.
+No se dispone del navegador de verificación compatible en este entorno. No se midieron FPS ni tiempo de carga reales antes/después y no se inventaron cifras.
+
+| Medición real en el mismo dispositivo | Antes | Después |
+|---|---|---|
+| Carga inicial | Pendiente | Pendiente |
+| FPS ×1 | Pendiente | Pendiente |
+| FPS ×2 | Pendiente | Pendiente |
+| FPS ×4 | Pendiente | Pendiente |
+
+### 5. Riesgos y revisión pendiente de Paul
+
+Los obstáculos son rectángulos conservadores con margen corporal: pueden hacer que un personaje se desvíe algo más, sin requerir física de cada pieza. La alfombra es suelo transitable; los accesorios del escritorio quedan dentro del volumen protegido del escritorio. Los guardados antiguos se separan con el mecanismo existente si una posición coincide con los muebles nuevos, conservando copia previa.
+El texto 3D de la TV es un resumen con cortes marcados con «…» cuando excede el espacio. El lector ampliable conserva todo el objetivo. El reloj y las lámparas son decoración fija, sin reloj de tiempo real ni luces dinámicas adicionales. La legibilidad final y el rendimiento en celular requieren observación en dispositivo real.
+
+- [ ] Mesa pequeña y seis sillas anteriores eliminadas; recepción de Nico despejada.
+- [ ] TV grande visible desde el escritorio de Paul y la cámara CEO.
+- [ ] TV apagada sin misión y con resumen cuando hay una misión activa.
+- [ ] Resumen y lector ampliable legibles en móvil.
+- [ ] Alfombra, librería, diplomas, plantas, lámparas, reloj, café y credenza armonizan sin saturar.
+- [ ] Paul y los empleados no atraviesan los muebles nuevos ni la decoración mural.
+- [ ] Visita, recepción y entrega mantienen recorridos coherentes.
+- [ ] Recarga conserva el resumen; TV apagada después de aceptar sin misiones en cola.
+- [ ] Medición de carga y FPS con `?debug=1` en escritorio y móvil.
+
+**Estado: mejora implementada y pruebas automáticas verificadas; PENDIENTE DE VERIFICACIÓN VISUAL Y APROBACIÓN DE PAUL.** Detenerse al entregar el informe y no avanzar a la Fase 2.
