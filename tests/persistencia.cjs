@@ -5,7 +5,7 @@ const h=createHarness();h.run("send('Quiero crear un sistema de inventario');sen
 let cases=new Set();
 for(let n=0;n<18000;n++){
  h.run('tickPeople(.05)');const state=h.run('people.map(p=>p.mode).join()');
- const kind=state.includes('working')?'trabajo':state.includes('briefing')?'reunión':(state.includes('gatheringTask')||state.includes('delegating'))?'encargo':state.includes('walking')?'recorrido':state.includes('waiting')?'solicitud':null;
+ const kind=state.includes('waiting')?'solicitud':state.includes('working')?'trabajo':state.includes('briefing')?'reunión':(state.includes('gatheringTask')||state.includes('delegating'))?'encargo':state.includes('walking')?'recorrido':state.includes('waiting')?'solicitud':null;
  if(kind&&!cases.has(kind)){
   cases.add(kind);const before=checkpoint(h),reloaded=createHarness(clone(h.storage)),after=checkpoint(reloaded);
   for(const field of ['tasks','requests','messages','activity'])assert.deepEqual(after[field],before[field],'Recarga conserva '+field+' en '+kind);

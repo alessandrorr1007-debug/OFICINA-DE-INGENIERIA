@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');const {createHarness}=require('./harness.cjs');
+const c={};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(__dirname,'../dist/traffic.js'),'utf8'),c);
+for(const dt of [.016,.032,.064,.24]){
+ const manager=c.createStudioTraffic([{x:0,z:-3,w:.12,d:4},{x:0,z:3,w:.12,d:4}]);
+ const starts=[[-4,-.6],[4,.6],[-3,1.2],[3,-1.2]],goals=[[4,-.6],[-4,.6],[3,1.2],[-3,-1.2]];
+ const actors=starts.map((pos,i)=>({i,pos:[...pos],mode:'walking',phase:0,route:[goals[i]]}));actors.forEach(p=>manager.request(p));let minimum=Infinity,steps=0;
+ for(;steps<10000&&actors.some(p=>p.route.length);steps++)for(const p of actors){manager.step(p,dt,actors);for(let a=0;a<actors.length;a++)for(let b=a+1;b<actors.length;b++){const d=Math.hypot(actors[a].pos[0]-actors[b].pos[0],actors[a].pos[1]-actors[b].pos[1]);minimum=Math.min(minimum,d);assert.ok(d>=manager.minimumDistance-1e-6,`Cruce dt=${dt}: ${d}`)}}
+ assert.ok(actors.every(p=>!p.route.length),'Todos atraviesan la puerta y llegan sin bloquearse');assert.ok(minimum>=.72);assert.ok(steps<10000);
+}
+const swap=c.createStudioTraffic([]),a=[{i:0,pos:[-2,0],mode:'walking',phase:0,route:[[2,0]]},{i:1,pos:[2,0],mode:'walking',phase:0,route:[[-2,0]]}];a.forEach(p=>swap.request(p));for(let k=0;k<1000&&a.some(p=>p.route.length);k++){a.forEach(p=>swap.step(p,.05,a));assert.ok(Math.hypot(a[0].pos[0]-a[1].pos[0],a[0].pos[1]-a[1].pos[1])>=.72)}assert.ok(a.every(p=>!p.route.length),'Intercambio de destinos con desvío temporal');
+const oldActors=[{i:0,pos:[0,0],mode:'idle'},{i:1,pos:[.2,0],mode:'walking'}];assert.deepEqual(Array.from(swap.recover(oldActors)),[1]);assert.ok(Math.hypot(oldActors[0].pos[0]-oldActors[1].pos[0],oldActors[0].pos[1]-oldActors[1].pos[1])>=.72);
+const h=createHarness();const report=h.run(`send('Quiero crear un sistema de inventario');let minimum=Infinity;for(let k=0;k<18000;k++){tickPeople(.05);for(let a=0;a<people.length;a++)for(let b=a+1;b<people.length;b++)minimum=Math.min(minimum,Math.hypot(people[a].pos[0]-people[b].pos[0],people[a].pos[1]-people[b].pos[1]));if(data.requests.length)break}({minimum,completed:data.requests.length===1})`);assert.ok(report.minimum>=.72,JSON.stringify(report));assert.ok(report.completed,'La misión termina con tráfico protegido');console.log('OK: cruces en puerta, dt ×1/×2/×4, intercambio de destinos y misión completa; separación mínima ≥ 0,72.');
