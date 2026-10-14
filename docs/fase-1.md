@@ -1,6 +1,6 @@
-# Fase 1 — avance para verificación de Paul
+# Fase 1 — aprobada; mejora de reuniones pendiente de aprobación
 
-Fecha: 14 de octubre de 2026. **Estado: implementaciones automáticas verificadas; cierre visual PENDIENTE DE VERIFICACIÓN DE PAUL.** La Fase 2 no se inició.
+Fecha: 14 de octubre de 2026. **Paul aprobó la Fase 1. La mejora adicional de la pantalla de reuniones queda PENDIENTE DE SU VERIFICACIÓN Y APROBACIÓN.** No se inició la Fase 2. La lista anterior se conserva como referencia, sin inventar resultados visuales.
 
 ## 1. Resumen
 
@@ -95,3 +95,51 @@ Completar por separado en computadora y celular. Marcar solo después de observa
 - La inspección completa de sillas, sofás y decoración depende de la lista manual; no se declara resuelta solo por pasar tests de centros y rectángulos.
 - Los guardados viejos con personajes superpuestos se reubican cerca antes de dibujarse; se conserva una copia local previa. Las misiones y resultados no se eliminan.
 - Se espera la revisión y aprobación de Paul. No avanzar a la Fase 2 sin ella.
+
+## Mejora adicional — pantalla de presentación de reuniones
+
+### Resumen
+
+La pantalla decorativa ya existía junto a la entrada, pero no tenía información dinámica. Se trasladó a la pared del fondo (Z = 21,71), con marco oscuro, soporte claro, superficie de 8,8 × 4,4 unidades y centro a 3,85 unidades de altura. Queda elevada sobre los personajes y la mesa.
+Una CanvasTexture de 1536 × 768 muestra título, objetivo de Paul, todos los convocados y el encargo actual. Los objetivos largos se dividen en páginas; los encargos aparecen uno por uno, junto al mensaje de Nico correspondiente.
+La explicación y las diapositivas comparten el temporizador simulado de Nico: respetan pausa, ×1/×2/×4 y recarga. La duración se adapta al texto y al número de encargos. Al terminar la explicación, vuelve al logo de la oficina.
+La vista directa mira hacia la pantalla. El panel «Pantalla de la reunión · Ampliar» ofrece el objetivo completo y los encargos revelados como texto seleccionable y legible en móvil; se oculta fuera de reunión. No se repinta la textura si no cambió la diapositiva.
+
+### Archivos
+
+- `dist/presentation.js`: estado de presentación, páginas y duración.
+- `dist/app.js`: pantalla 3D, textura, sincronización, mensajes progresivos y cámara de reuniones.
+- `dist/index.html`, `dist/style.css`: lector ampliable y carga del módulo.
+- `tests/pantalla.cjs`: prueba nueva de reunión y pantalla.
+- `tests/escena.mjs`: textura real de Three.js con renderizador de prueba.
+- `tests/harness.cjs`, `tests/coordinacion.cjs`, `tests/run.cjs`: carga del módulo y ejecución de la nueva suite.
+- `docs/fase-1.md`: este informe.
+
+### Cómo probar
+
+1. Abrir la oficina y elegir «Sala de reuniones» en Cámara, o tocar su letrero. Observar el logo en reposo.
+2. Dar la orden «Quiero crear un sistema de inventario con base de datos» y esperar a que Nico reúna al equipo.
+3. Confirmar título y objetivo, seis convocados y aparición sucesiva de encargos. Contrastar el encargo en pantalla con el mensaje de Nico.
+4. Pausar durante la explicación: la diapositiva debe permanecer quieta. Continuar y alternar ×1, ×2 y ×4.
+5. Enviar un objetivo largo para ver todas sus páginas. Abrir «Pantalla de la reunión · Ampliar» para leer el texto completo y los encargos presentados.
+6. Recargar durante la explicación: debe conservarse el punto de presentación. Cuando el equipo se levante, confirmar el regreso al logo y la desaparición del lector.
+7. Ejecutar `npm test`.
+
+### Pruebas y riesgos
+
+Las nueve suites pasan, incluidos los 256 recorridos, reuniones, coordinación y guardado. La nueva prueba cubre objetivo, seis encargos, velocidades ×1/×2/×4, pausa, recarga, texto largo y reposo final. La prueba de escena verifica que existe CanvasTexture y que su versión cambia con el contenido y permanece estable durante la pausa.
+Las reuniones con objetivos largos duran más para permitir presentar todo el texto. No se cambiaron recorridos, muebles de otras salas ni servicios de IA. La comprobación usa geometría de Three.js y un renderizador de prueba, no GPU ni navegador: la legibilidad y el encuadre en dispositivos reales siguen pendientes.
+
+### Lista visual de esta mejora — PENDIENTE DE VERIFICACIÓN DE PAUL
+
+- [ ] Pantalla en la pared del fondo, con marco oscuro y sin atravesar mesa o personajes.
+- [ ] Legible desde todos los asientos y desde la cámara directa de la sala.
+- [ ] Título, objetivo y convocados correctos.
+- [ ] Encargos aparecen en el mismo momento que el mensaje correspondiente de Nico.
+- [ ] Pausa congela la presentación; ×1, ×2 y ×4 la aceleran correctamente.
+- [ ] Objetivo largo completo por páginas y lector ampliable sin cortes.
+- [ ] Recarga recupera la diapositiva en curso.
+- [ ] Logo en reposo al finalizar y antes de otra reunión.
+- [ ] Lector ampliable legible en móvil y escritorio.
+
+Se espera la aprobación de esta mejora. No continuar con la Fase 2 en este alcance.
