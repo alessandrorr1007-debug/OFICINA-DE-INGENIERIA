@@ -1,0 +1,4 @@
+const assert=require('node:assert/strict');const {createHarness}=require('./harness.cjs');
+for(const search of ['', '?debug=0','?debug=10','?other=1']){const h=createHarness(new Map(),{search});assert.equal(h.elements['debug-panel'].hidden,true)}
+for(const search of ['?debug=1','?other=1&debug=1']){const h=createHarness(new Map(),{search});assert.equal(h.elements['debug-panel'].hidden,false);h.run("updateDebugPanel({averageFps:59.84,firstFrameMs:1250,speed:4,paused:true,viewport:{width:390,height:844}})");assert.match(h.elements['debug-panel'].textContent,/FPS: 59.8/);assert.match(h.elements['debug-panel'].textContent,/Carga: 1.25 s/);assert.match(h.elements['debug-panel'].textContent,/×4 · Pausa/);assert.match(h.elements['debug-panel'].textContent,/390 × 844/)}
+console.log('OK: diagnóstico oculto por defecto y visible solo con ?debug=1; FPS, carga, velocidad y viewport.');
