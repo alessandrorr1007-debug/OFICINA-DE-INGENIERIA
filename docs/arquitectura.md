@@ -22,7 +22,7 @@ Three.js usa WebGL 2, luces hemisférica/direccionales, materiales estándar y s
 
 ## Persistencia corregida
 
-`save` añade un punto de control de versión interna 1 al formato local existente. Guarda referencias por identificador, posiciones, estados, temporizadores, rutas y acciones de llegada declarativas; no serializa ni evalúa funciones. `restoreRuntime` valida y reconstruye los callbacks mediante acciones conocidas. Los guardados anteriores usan la recuperación por etapas ya existente.
+`save` añade un punto de control de versión interna 2 al formato local existente. Guarda referencias por identificador, posiciones, estados, temporizadores, rutas y acciones de llegada declarativas; no serializa ni evalúa funciones. `restoreRuntime` valida y reconstruye los callbacks mediante acciones conocidas. Los guardados anteriores usan la recuperación por etapas ya existente.
 
 Paul y la cámara se conservan mediante un capturador visual. La interfaz vuelve a mostrar pausa y velocidad al recargar. Los resultados, mensajes, solicitudes y cola quedan en la misma estructura, con compatibilidad anterior y copia previa de JSON dañado.
 
@@ -33,3 +33,23 @@ Paul y la cámara se conservan mediante un capturador visual. La interfaz vuelve
 En un navegador real, `window.paulStudioDiagnostics.report()` devuelve FPS medios de las últimas 300 muestras, percentil 95 del tiempo entre fotogramas, primera entrega del fotograma, tamaño de viewport, llamadas de dibujo, triángulos y tiempo simulado. No sustituye la inspección visual ni el análisis de GPU. No se han recogido medidas reales en este entorno.
 
 El contador visible se activa únicamente con `?debug=1`. Las cifras provienen del navegador donde se abre la aplicación; no se han medido FPS reales en el entorno de desarrollo.
+
+## Ampliación visual: dos plantas
+
+`building.js` define `connectionStations` con una estructura común: `id`, `nombre`, `encargado`, `estado`, `descripcion` y `mobiliario`, más posición, color y tipo de decoración. El estado es fijo Desconectado. Añadir módulos parte de este catálogo; no existen adaptadores ni credenciales de servicios.
+
+La escena se divide en tres grupos: estructura compartida, planta baja y oficina superior trasladada 10 unidades en Y. Se conservan las coordenadas X/Z de las habitaciones originales. Los huecos de escaleras y ascensores recortan la losa y se registran como obstáculos. Los accesos ocupan franjas exteriores; se retira una planta decorativa que coincidía con el hueco de escalera. `building-view.js` construye recepción, módulos y accesos; agrupa geometría fija por material y planta, reutiliza geometrías móviles y no añade luces. La planta superior se oculta al mirar la inferior.
+
+### Circulación vertical
+
+Cada planta tiene su gestor `createStudioTraffic`. Las visitas enlazan las rutas horizontales con tres conectores reservables: escalera y dos ascensores, todos con capacidad de una persona. La escalera interpola un recorrido con tramos verticales y horizontales sobre 40 peldaños. Los ascensores abren puertas, embarcan, cierran, viajan y desembarcan; una cabina vacía vuelve al piso de recogida cuando hace falta. El movimiento comprueba separación espacial entre actores, además de la reserva del conector y del desembarco.
+
+Los visitantes usan estados declarativos de cola, aproximación, espera, cruce, visita y regreso. Comparten el delta de simulación, pausa y velocidades. Los encargados hacen paseos cortos en su planta. Una misión nueva solicita el regreso de visitantes y espera antes de activar la coordinación habitual. Paul permanece en la oficina superior.
+
+### Guardado y cámara
+
+Se conserva `office3d-v2`, añadiendo `runtime.version = 2`, planta y elevación por actor, visitas, encargados y estado de conectores. Antes de migrar un punto de control versión 1 se guarda el contenido original bajo `office3d-v2-backup-floors-…`; sus posiciones y cámara se trasladan a la planta superior sin sustituir misiones ni historial. La cámara guarda `floorView` (1, 2 o all), destino y seguimiento. Seguir a un visitante cambia de planta según su altura.
+
+### Validación pendiente de Paul
+
+Esta entrega no ejecuta `npm test`, recorridos automatizados ni mediciones, conforme a la instrucción de Paul. Se actualizaron los cargadores de pruebas para incluir los dos scripts nuevos y se revisó la sintaxis. Queda pendiente revisar en móvil: oclusión de losas, legibilidad de letreros, trayectos y reservas simultáneas, puertas, restauración durante un cruce y rendimiento. La conservación de las pruebas históricas aún requiere ejecución; no se afirma que esta ampliación esté validada visualmente.
