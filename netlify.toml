@@ -16,6 +16,16 @@
   to = "/.netlify/functions/logout"
   status = 200
 
+[[redirects]]
+  from = "/api/connections/*"
+  to = "/.netlify/functions/connections?action=:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/connections"
+  to = "/.netlify/functions/connections"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

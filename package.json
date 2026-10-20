@@ -1,5 +1,10 @@
 {
   "name": "paul-engineering-studio",
   "private": true,
-  "scripts": {"test": "node tests/run.cjs"}
+  "scripts": {
+    "test": "node tests/run.cjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^11.1.5"
+  }
 }
