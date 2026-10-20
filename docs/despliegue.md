@@ -113,3 +113,61 @@ Una vez completado el despliegue en Netlify:
    - La sesión permanecerá activa durante 30 días sin volver a pedirla en ese navegador.
 6. Pulsa el botón **"Salir"** en la esquina superior derecha:
    - La sesión se destruirá y volverá a aparecer la pantalla de contraseña.
+
+---
+
+## 7. Configuración de `ENCRYPTION_KEY` para el Almacenamiento Cifrado de Estaciones
+
+Para que el sistema de **Configuración de Conexiones** pueda guardar credenciales en Netlify Blobs de forma segura (AES-256-GCM), debes añadir la variable **`ENCRYPTION_KEY`**:
+
+1. Entra a [app.netlify.com](https://app.netlify.com) > Tu sitio > **Site configuration** > **Environment variables**.
+2. Pulsa en **"Add a variable"**:
+   - **Key**: `ENCRYPTION_KEY`
+   - **Value**: Una cadena larga y aleatoria de 64 caracteres hexadecimales (puedes generarla con el mismo comando que `SESSION_SECRET`).
+   - Marca la opción **"Same value for all deploy contexts"** y asegúrate de no compartirla con nadie.
+3. Guarda la variable y realiza un nuevo despliegue (**Trigger deploy**).
+
+---
+
+## 8. Cómo Crear las Credenciales desde tu Celular
+
+### A. Token de GitHub (Fine-Grained, Solo Lectura)
+Este token le permite a Hugo (estación de GitHub en la Planta 1) consultar la rama `main` y los últimos 5 commits:
+
+1. Desde el navegador de tu celular, entra a [github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta) (o ve a tu foto de perfil > **Settings** > **Developer settings** > **Personal access tokens** > **Fine-grained tokens**).
+2. Pulsa en **"Generate new token"**.
+3. Configura:
+   - **Token name**: `Paul Studio - Solo lectura`.
+   - **Expiration**: 90 días (o la duración que prefieras).
+   - **Resource owner**: Tu usuario (`alessandrorr1007-debug`).
+   - **Repository access**: Selecciona **"Only select repositories"** y elige únicamente `alessandrorr1007-debug/OFICINA-DE-INGENIERIA`.
+4. En **Permissions** > **Repository permissions**:
+   - Busca **"Contents"** y selecciona únicamente **"Read-only"**.
+   - Busca **"Metadata"** (se marcará automáticamente en **"Read-only"**).
+   - Deja todos los demás permisos en **"No access"**.
+5. Baja hasta el final y pulsa **"Generate token"**.
+6. Copia el token generado (empieza por `github_pat_...`).
+7. En la oficina virtual (Planta 1), toca la estación de **GitHub** o a **Hugo**, pulsa en el engranaje ⚙️, pega el token en el campo correspondiente y pulsa **Guardar** o **Probar conexión**.
+
+---
+
+### B. Clave de Groq (Especialista en Modelos de IA)
+Esta clave le permite a Iris (estación de IA en la Planta 1) realizar inferencias ultra rápidas con modelos oficiales de Groq:
+
+1. Desde el navegador de tu celular, entra a [console.groq.com/keys](https://console.groq.com/keys).
+2. Inicia sesión (o crea cuenta gratuita con tu correo/Google/GitHub).
+3. Pulsa el botón **"Create API Key"**.
+4. Asígnale un nombre descriptivo (ejemplo: `Paul Studio IA`).
+5. Pulsa **"Submit"** y copia la clave generada (empieza por `gsk_...`).
+6. En la oficina virtual (Planta 1), toca la estación de **IA** o a **Iris**, pulsa en el engranaje ⚙️, pega la API Key, confirma el modelo sugerido (`llama-3.3-70b-versatile`) y pulsa **Guardar** o **Probar conexión**.
+
+---
+
+### C. Build Hook de Netlify (Despliegue)
+Permite verificar la integración con el sistema de despliegues:
+
+1. En [app.netlify.com](https://app.netlify.com), ve a tu sitio > **Site configuration** > **Build & deploy** > **Continuous deployment**.
+2. Desplázate hasta la sección **Build hooks** y pulsa **"Add build hook"**.
+3. Asigna el nombre `Paul Studio Deploy` y selecciona la rama `main`.
+4. Pulsa **Save** y copia la URL generada (`https://api.netlify.com/build_hooks/...`).
+5. En la oficina virtual (Planta 1), toca la estación de **Despliegue** o a **Teo**, pulsa en ⚙️, pega la URL y pulsa **Probar conexión** (se validará el formato de forma segura sin disparar un despliegue innecesario).
