@@ -1,0 +1,15 @@
+# Variables de entorno y secretos locales
+.env
+.env.*
+!.env.example
+
+# Dependencias y artefactos locales
+node_modules/
+npm-debug.log*
+
+# Netlify CLI cache y build
+.netlify/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
