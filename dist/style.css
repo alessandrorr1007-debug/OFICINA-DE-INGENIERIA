@@ -17,3 +17,44 @@ body{background:#e7e8eb;color:#273c3f}header{height:88px;background:#f5f4f0;bord
 .floor-controls{position:absolute;z-index:6;left:22px;top:152px;display:flex;gap:6px;flex-wrap:wrap;max-width:360px;padding:7px;background:#f6f3ebef;border:1px solid #c7cec6;border-radius:14px;box-shadow:0 4px 15px #233d3418}.floor-controls button{min-height:44px;padding:9px 12px;font-size:12px;background:#e3e6de;color:#344b4b}.floor-controls button[aria-pressed="true"]{background:#344b4b;color:#f5edda}.floor-controls span{flex-basis:100%;font-size:10px;padding:2px 5px;color:#5d7466}.station-card{display:grid;grid-template-columns:12px 1fr;gap:4px 9px;width:100%;margin:6px 0;padding:12px;text-align:left;background:#fffdf9;border:1px solid #d6dace;color:#344b4b;min-height:54px}.station-card b{font-size:12px}.station-card small{grid-column:2;font-size:10px;color:#8c6d68;letter-spacing:0}.station-dot{width:10px;height:10px;border-radius:50%;margin-top:3px}.station-label{border-bottom:3px solid #a57590;min-height:40px}.station-label small{color:#dfc6c1}.hub-person{max-width:160px;white-space:normal}.portal-label{background:#f2e7cfed;color:#344b4b;min-height:38px}.portal-label small{color:#6b7972}.disconnected{color:#945d59;background:#eee3df;border-radius:9px;padding:10px 12px;font-weight:600}.station-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}#station-dialog{max-height:90dvh;overflow:auto}#station-dialog select{display:block;width:100%;min-height:44px;margin:6px 0 14px;border:1px solid #c6cec2;background:#fffdf9;border-radius:8px;padding:9px;color:#344b4b}#station-dialog button{min-height:44px}#station-dialog hr{border:0;border-top:1px solid #d6dace;margin:20px 0}#connections-panel summary{gap:10px}.view-controls select{max-width:205px}
 @media(max-width:750px){.floor-controls{left:12px;right:12px;top:132px;max-width:none;gap:5px;padding:6px}.floor-controls button{flex:1;padding:8px 6px;font-size:11px;white-space:nowrap}.floor-controls span{font-size:10px}.hub-person{max-width:120px;font-size:9px}.hub-person small{font-size:8px}.view-controls select{max-width:180px}.station-label{max-width:126px;min-height:44px}.portal-label{max-width:110px;font-size:8px}}
 .top button.logout-btn{background:#e7ece6;color:#395449;border:1px solid #c8d3c7;padding:8px 13px;font-size:11px;font-weight:600;border-radius:10px;box-shadow:none;transition:background .2s,color .2s}.top button.logout-btn:hover{background:#d9e2d7;color:#20382f}
+
+/* Sistema de Conexiones y Estados */
+.station-status-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 14px}
+.station-badge{display:inline-flex;align-items:center;padding:7px 12px;border-radius:9px;font-weight:600;font-size:11px;letter-spacing:.02em}
+.status-desconectado,.station-badge.disconnected{color:#8c524e;background:#eee3df;border:1px solid #e2d2ce}
+.status-conectando,.station-badge.connecting{color:#9c6823;background:#faedd6;border:1px solid #ebd4b5}
+.status-conectado,.station-badge.connected{color:#205c38;background:#def0e3;border:1px solid #c2e2cc}
+.status-error,.station-badge.error{color:#a82e2e;background:#fae4e4;border:1px solid #f2c7c7}
+.status-limite-alcanzado,.station-badge.limit{color:#653b92;background:#efe5fa;border:1px solid #ddccf4}
+.station-label.status-conectado{border-bottom-color:#205c38}
+.station-label.status-error{border-bottom-color:#a82e2e}
+.station-label.status-conectando{border-bottom-color:#9c6823}
+.station-label.status-limite-alcanzado{border-bottom-color:#653b92}
+.station-gear-btn{background:#eef2e9;border:1px solid #ccd5c8;border-radius:9px;padding:6px 10px;font-size:15px;cursor:pointer;line-height:1;transition:background .15s}
+.station-gear-btn:hover{background:#e0e6da}
+
+/* Modal de Configuración */
+#station-config-dialog{padding:26px;max-width:480px;width:min(480px,94vw);max-height:92dvh;overflow-y:auto;background:#fbfaf6;border-radius:24px;border:1px solid #dce0d7;box-shadow:0 18px 50px rgba(36,60,57,.18)}
+.station-config-badge-wrap{display:flex;align-items:center;gap:10px;margin:10px 0 16px;flex-wrap:wrap}
+.station-meta-info{font-size:11px;color:#768a80}
+#station-config-dialog .field-group{margin-bottom:14px;display:flex;flex-direction:column;gap:6px}
+#station-config-dialog .field-group label{font-size:12px;font-weight:600;color:#354f46}
+#station-config-dialog .field-help{font-size:10px;color:#7c8e85;margin-top:2px;line-height:1.4}
+#station-config-dialog .input-wrapper{position:relative;display:flex;align-items:center}
+#station-config-dialog input,#station-config-dialog select{width:100%;min-height:48px;padding:0 12px;font-size:14px;background:#fffdf9;border:1.5px solid #c8d2c4;border-radius:12px;color:#273e3a;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+#station-config-dialog .input-wrapper input{padding-right:44px}
+#station-config-dialog input:focus,#station-config-dialog select:focus{border-color:#2e4b44;box-shadow:0 0 0 3px rgba(46,75,68,.12)}
+#station-config-dialog .icon-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;background:transparent;border:0;color:#627b72;cursor:pointer;border-radius:8px}
+#station-config-dialog .icon-btn:hover{background:#edebe2;color:#263f3b}
+.checkbox-label{display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;color:#435b52;margin-top:4px}
+.checkbox-label input{width:auto!important;min-height:auto!important;margin:0}
+.test-result-box{padding:12px 14px;border-radius:12px;font-size:12px;line-height:1.5;margin:14px 0;white-space:pre-wrap;word-break:break-word}
+.test-result-box.type-success{background:#def0e3;color:#1d5835;border:1px solid #bce0c8}
+.test-result-box.type-error{background:#fae4e4;color:#a12b2b;border:1px solid #f2c7c7}
+.test-result-box.type-limit{background:#efe5fa;color:#5f348e;border:1px solid #dcc9f4}
+.test-result-box.type-info{background:#edf3e6;color:#325044;border:1px solid #cad9c0}
+.config-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.config-actions button{min-height:50px;flex:1 1 120px;font-size:13px;font-weight:600;border-radius:12px;touch-action:manipulation;cursor:pointer}
+.config-actions .btn-primary{background:#263f3b;color:#f7f4ea;border:0;box-shadow:0 4px 12px rgba(38,63,59,.18)}
+.config-actions .btn-secondary{background:#e7ece5;color:#315146;border:1px solid #c7d2c3}
+.config-actions .btn-danger{background:#fbeef0;color:#9a2b34;border:1px solid #f3c9ce}
